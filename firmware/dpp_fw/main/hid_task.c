@@ -185,7 +185,9 @@ uint8_t const *tud_hid_descriptor_report_cb(uint8_t instance)
     return hid_report_descriptor;
 }
 
-void tud_umount_cb(void) { is_usb_hid_connected = 0; }
+// cw-landscape fork: tud_umount_cb removed — esp_tinyusb's tusb_msc_storage.c
+// defines it (strong) and master fails to link with both definitions present.
+// Matches released 3.3.5 behavior (flag persists after USB unmount).
 
 uint16_t tud_hid_get_report_cb(uint8_t instance, uint8_t report_id, hid_report_type_t report_type, uint8_t* buffer, uint16_t reqlen)
 {

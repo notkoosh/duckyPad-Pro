@@ -326,30 +326,32 @@ void draw_profile_rotated(profile_info* this_profile)
 	
   ssd1306_Line(0,10,127,10,White); // title solid line
 
+  // cw-landscape fork: device is mounted rotated 90deg CW (stock assumes CCW),
+  // so cell-to-key mapping runs the other way: top row = keys 17 13 9 5 1.
   // uint8_t cell_col, uint8_t cell_row, char* first_line, char* second_line
-  draw_cell_content_rotated(0, 0, this_profile->sw_name_firstline[3], this_profile->sw_name_secondline[3]);
-  draw_cell_content_rotated(1, 0, this_profile->sw_name_firstline[7], this_profile->sw_name_secondline[7]);
-  draw_cell_content_rotated(2, 0, this_profile->sw_name_firstline[11], this_profile->sw_name_secondline[11]);
-  draw_cell_content_rotated(3, 0, this_profile->sw_name_firstline[15], this_profile->sw_name_secondline[15]);
-  draw_cell_content_rotated(4, 0, this_profile->sw_name_firstline[19], this_profile->sw_name_secondline[19]);
+  draw_cell_content_rotated(0, 0, this_profile->sw_name_firstline[16], this_profile->sw_name_secondline[16]);
+  draw_cell_content_rotated(1, 0, this_profile->sw_name_firstline[12], this_profile->sw_name_secondline[12]);
+  draw_cell_content_rotated(2, 0, this_profile->sw_name_firstline[8], this_profile->sw_name_secondline[8]);
+  draw_cell_content_rotated(3, 0, this_profile->sw_name_firstline[4], this_profile->sw_name_secondline[4]);
+  draw_cell_content_rotated(4, 0, this_profile->sw_name_firstline[0], this_profile->sw_name_secondline[0]);
 
-  draw_cell_content_rotated(0, 1, this_profile->sw_name_firstline[3-1], this_profile->sw_name_secondline[3-1]);
-  draw_cell_content_rotated(1, 1, this_profile->sw_name_firstline[7-1], this_profile->sw_name_secondline[7-1]);
-  draw_cell_content_rotated(2, 1, this_profile->sw_name_firstline[11-1], this_profile->sw_name_secondline[11-1]);
-  draw_cell_content_rotated(3, 1, this_profile->sw_name_firstline[15-1], this_profile->sw_name_secondline[15-1]);
-  draw_cell_content_rotated(4, 1, this_profile->sw_name_firstline[19-1], this_profile->sw_name_secondline[19-1]);
+  draw_cell_content_rotated(0, 1, this_profile->sw_name_firstline[16+1], this_profile->sw_name_secondline[16+1]);
+  draw_cell_content_rotated(1, 1, this_profile->sw_name_firstline[12+1], this_profile->sw_name_secondline[12+1]);
+  draw_cell_content_rotated(2, 1, this_profile->sw_name_firstline[8+1], this_profile->sw_name_secondline[8+1]);
+  draw_cell_content_rotated(3, 1, this_profile->sw_name_firstline[4+1], this_profile->sw_name_secondline[4+1]);
+  draw_cell_content_rotated(4, 1, this_profile->sw_name_firstline[0+1], this_profile->sw_name_secondline[0+1]);
 
-  draw_cell_content_rotated(0, 2, this_profile->sw_name_firstline[3-2], this_profile->sw_name_secondline[3-2]);
-  draw_cell_content_rotated(1, 2, this_profile->sw_name_firstline[7-2], this_profile->sw_name_secondline[7-2]);
-  draw_cell_content_rotated(2, 2, this_profile->sw_name_firstline[11-2], this_profile->sw_name_secondline[11-2]);
-  draw_cell_content_rotated(3, 2, this_profile->sw_name_firstline[15-2], this_profile->sw_name_secondline[15-2]);
-  draw_cell_content_rotated(4, 2, this_profile->sw_name_firstline[19-2], this_profile->sw_name_secondline[19-2]);
+  draw_cell_content_rotated(0, 2, this_profile->sw_name_firstline[16+2], this_profile->sw_name_secondline[16+2]);
+  draw_cell_content_rotated(1, 2, this_profile->sw_name_firstline[12+2], this_profile->sw_name_secondline[12+2]);
+  draw_cell_content_rotated(2, 2, this_profile->sw_name_firstline[8+2], this_profile->sw_name_secondline[8+2]);
+  draw_cell_content_rotated(3, 2, this_profile->sw_name_firstline[4+2], this_profile->sw_name_secondline[4+2]);
+  draw_cell_content_rotated(4, 2, this_profile->sw_name_firstline[0+2], this_profile->sw_name_secondline[0+2]);
 
-  draw_cell_content_rotated(0, 3, this_profile->sw_name_firstline[3-3], this_profile->sw_name_secondline[3-3]);
-  draw_cell_content_rotated(1, 3, this_profile->sw_name_firstline[7-3], this_profile->sw_name_secondline[7-3]);
-  draw_cell_content_rotated(2, 3, this_profile->sw_name_firstline[11-3], this_profile->sw_name_secondline[11-3]);
-  draw_cell_content_rotated(3, 3, this_profile->sw_name_firstline[15-3], this_profile->sw_name_secondline[15-3]);
-  draw_cell_content_rotated(4, 3, this_profile->sw_name_firstline[19-3], this_profile->sw_name_secondline[19-3]);
+  draw_cell_content_rotated(0, 3, this_profile->sw_name_firstline[16+3], this_profile->sw_name_secondline[16+3]);
+  draw_cell_content_rotated(1, 3, this_profile->sw_name_firstline[12+3], this_profile->sw_name_secondline[12+3]);
+  draw_cell_content_rotated(2, 3, this_profile->sw_name_firstline[8+3], this_profile->sw_name_secondline[8+3]);
+  draw_cell_content_rotated(3, 3, this_profile->sw_name_firstline[4+3], this_profile->sw_name_secondline[4+3]);
+  draw_cell_content_rotated(4, 3, this_profile->sw_name_firstline[0+3], this_profile->sw_name_secondline[0+3]);
 
   ssd1306_Line(0,39,127,39,White); // horizontal lines
   ssd1306_Line(0,68,127,68,White);
@@ -369,7 +371,8 @@ void draw_profile(profile_info* this_profile)
 {
   if(this_profile->is_landscape)
   {
-    ssd1306_set_rotation_only_for_128x128_do_not_use_for_anything_else(SSD1306_ROTATE_CW90);
+    // cw-landscape fork: CCW90 content compensates a device physically rotated CW
+    ssd1306_set_rotation_only_for_128x128_do_not_use_for_anything_else(SSD1306_ROTATE_CCW90);
     draw_profile_rotated(this_profile);
   }
   else

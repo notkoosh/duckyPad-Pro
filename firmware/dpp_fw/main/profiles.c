@@ -324,6 +324,49 @@ void load_profile_config(profile_info* this_profile)
   fclose(sd_file);
 }
 
+// cw-landscape Stage B: per-layer label overlay for the CURRENT profile (raise=0,
+// lower=1). Filled from config.txt directives RZ<n>/RX<n> (raise line1/line2) and
+// LZ<n>/LX<n> (lower) on every goto_profile. Single instance to save RAM.
+char layer_name_firstline[LAYER_OVERLAY_COUNT][TOTAL_OBSW_COUNT][KEYNAME_SIZE];
+char layer_name_secondline[LAYER_OVERLAY_COUNT][TOTAL_OBSW_COUNT][KEYNAME_SIZE];
+
+void load_layer_overlay(profile_info* this_profile)
+{
+  memset(layer_name_firstline, 0, sizeof(layer_name_firstline));
+  memset(layer_name_secondline, 0, sizeof(layer_name_secondline));
+  if(this_profile == NULL || this_profile->is_loaded == 0)
+    return;
+  memset(filename_buf, 0, FILENAME_BUFSIZE);
+  snprintf(filename_buf, FILENAME_BUFSIZE, "%s/profile_%s/config.txt", SD_MOUNT_POINT, this_profile->pf_name);
+  FILE *sd_file = fopen(filename_buf, "r");
+  if(sd_file == NULL)
+    return;
+  CLEAR_TEMP_BUF();
+  while(fgets(temp_buf, TEMP_BUFSIZE, sd_file))
+  {
+    strip_newline(temp_buf, TEMP_BUFSIZE);
+    char* line = temp_buf;
+    if(strlen(line) > 3 && (line[0] == 'R' || line[0] == 'L') && (line[1] == 'Z' || line[1] == 'X'))
+    {
+      uint8_t layer = (line[0] == 'R') ? 0 : 1;
+      uint8_t key_index = atoi(line + 2);
+      if(key_index >= 1 && key_index <= TOTAL_OBSW_COUNT)
+      {
+        key_index--;
+        char* label = goto_next_arg(line, line + strlen(line));
+        if(label != NULL)
+        {
+          char (*arr)[KEYNAME_SIZE] = (line[1] == 'Z') ? layer_name_firstline[layer] : layer_name_secondline[layer];
+          strncpy(arr[key_index], label, KEYNAME_SIZE - 1);
+          arr[key_index][KEYNAME_SIZE - 1] = 0;
+        }
+      }
+    }
+    CLEAR_TEMP_BUF();
+  }
+  fclose(sd_file);
+}
+
 uint8_t is_valid_profile_number(uint8_t profile_number)
 {
   if(profile_number >= MAX_PROFILES || all_profile_info[profile_number].is_loaded == 0)
@@ -360,9 +403,20 @@ uint8_t goto_profile_without_updating_rgb_LED(uint8_t profile_number)
 
 void goto_profile(uint8_t profile_number)
 {
+  if(is_valid_profile_number(profile_number) == 0)
+    return;
+  // cw-landscape Stage B: clear the sticky layer latch (_GV8) and load this
+  // profile's per-layer label overlay on entry, so the grid starts at base.
+  int32_t latch_zero = 0;
+  memcpy(&pgv_buf[8 * PGV_BYTE_WIDTH], &latch_zero, sizeof(latch_zero));
+  load_layer_overlay(&all_profile_info[profile_number]);
   if(goto_profile_without_updating_rgb_LED(profile_number))
     return;
   load_persistent_state();
+  // cw-landscape: layer color-paint (SWC) is meant to be TRANSIENT. Saved per-key
+  // colors must not override a profile's base family colors on entry -- otherwise a
+  // layer left via +/- leaves the board "stuck lavender". Force base on every entry.
+  memset(all_profile_info[current_profile_number].has_user_assigned_keycolor, 0, MECH_OBSW_COUNT);
   redraw_bg(current_profile_number);
   
   if(all_profile_info[profile_number].is_upper_halfstep)

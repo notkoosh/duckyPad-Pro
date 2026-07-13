@@ -59,6 +59,14 @@ extern uint8_t current_profile_number;
 extern char temp_buf[TEMP_BUFSIZE];
 extern char filename_buf[FILENAME_BUFSIZE];
 
+// cw-landscape Stage B: single current-profile overlay of per-layer key labels
+// (loaded on goto_profile). The OLED grid shows these when the sticky latch _GV8
+// selects a layer. Index 0 = raise, 1 = lower.
+#define LAYER_OVERLAY_COUNT 2
+extern char layer_name_firstline[LAYER_OVERLAY_COUNT][TOTAL_OBSW_COUNT][KEYNAME_SIZE];
+extern char layer_name_secondline[LAYER_OVERLAY_COUNT][TOTAL_OBSW_COUNT][KEYNAME_SIZE];
+void load_layer_overlay(profile_info* this_profile);
+
 uint8_t load_settings(dp_global_settings* dps);
 uint8_t scan_profiles();
 void idle_loop(void);
